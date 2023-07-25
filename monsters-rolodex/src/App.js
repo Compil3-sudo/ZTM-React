@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import CardList from "./components/card-list/card-list.component";
+import SearchBox from "./components/search-box/search-box.component";
+import "./App.css";
 
 class App extends Component {
   constructor() {
@@ -28,6 +31,7 @@ class App extends Component {
 
     this.state = {
       monsters: [],
+      searchField: "",
     };
   }
 
@@ -40,39 +44,38 @@ class App extends Component {
           () => {
             return { monsters: users };
           },
-          () => console.log(this.state)
+          () => {
+            console.log(this.state);
+          }
         )
       );
   }
 
+  onSearchChangeHandler = (event) => {
+    const searchedMonster = event.target.value.toLocaleLowerCase();
+
+    this.setState(() => {
+      return { searchField: searchedMonster };
+    });
+  };
+
   render() {
+    const { monsters, searchField } = this.state;
+    const { onSearchChangeHandler } = this;
+
+    const filteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
+
     return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        {/* <div>App Component</div>
-        <h1>
-          {this.state.name.firstName} {this.state.name.lastName}
-        </h1>
-        <h2>Learning: {this.state.course}</h2>
-        <button
-          onClick={() => {
-            this.setState(
-              () => {
-                return {
-                  name: { firstName: "New", lastName: "Name" },
-                };
-              },
-              // callBack function
-              () => {
-                console.log(this.state);
-              }
-            );
-          }}
-        >
-          Change Name
-        </button> */}
-        {this.state.monsters.map((monster) => {
-          return <h1 key={monster.id}>{monster.name}</h1>;
-        })}
+      <div className="App">
+        <h1 className="app-title">Monsters Rolodex</h1>
+        <SearchBox
+          onSearchChange={onSearchChangeHandler}
+          placeholder="Search Monsters"
+          className="search-box"
+        />
+        <CardList filteredMonsters={filteredMonsters} />
       </div>
     );
   }
