@@ -9,7 +9,7 @@ export default class CardList extends Component {
     return (
       <div className="card-list">
         {filteredMonsters.map((monster) => {
-          return <Card monster={monster} />;
+          return <Card key={monster.id} monster={monster} />;
         })}
       </div>
     );
