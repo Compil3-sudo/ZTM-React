@@ -4,7 +4,7 @@ import "./index.scss";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navigation from "./routes/navigation/navigation.component";
-import SignIn from "./routes/sign-in/sign-in.component";
+import Authentication from "./routes/authentication/authentication.component";
 
 const Shop = () => {
   return <h1>Shop Page</h1>;
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <App />,
       },
-      { path: "/sign-in", element: <SignIn /> },
+      { path: "/auth", element: <Authentication /> },
       { path: "/shop", element: <Shop /> },
     ],
   },
