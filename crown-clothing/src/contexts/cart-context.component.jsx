@@ -53,11 +53,6 @@ const decrementCartItem = (cartItems, productToDecrement) => {
     return;
   }
 
-  const updatedProduct = {
-    ...productToDecrement,
-    quantity: productToDecrement.quantity - 1,
-  };
-
   // when product.quantity is 1 => 0 after decrement => remove item from cart
   if (productToDecrement.quantity === 1) {
     let updatedCartItems = cartItems.filter(
@@ -66,8 +61,36 @@ const decrementCartItem = (cartItems, productToDecrement) => {
     return updatedCartItems;
   }
 
+  const updatedProduct = {
+    ...productToDecrement,
+    quantity: productToDecrement.quantity - 1,
+  };
+
   let updatedCartItems = [...cartItems];
   updatedCartItems[productIndex] = updatedProduct;
+
+  return updatedCartItems;
+};
+
+const deleteCartItem = (cartItems, productToDelete) => {
+  // completely delete an item from cart
+  // should only be called on existing cart items
+  const productIndex = cartItems.findIndex(
+    (product) => product.id === productToDelete.id
+  );
+
+  const existingProduct = cartItems[productIndex];
+
+  if (!existingProduct) {
+    console.log(
+      "ERROR: This function should only be called on existing cart items!"
+    );
+    return;
+  }
+
+  let updatedCartItems = cartItems.filter(
+    (product) => product.id !== productToDelete.id
+  );
 
   return updatedCartItems;
 };
@@ -78,6 +101,7 @@ export const CartContext = createContext({
   cartItems: [],
   addItemToCart: (productToAdd) => {},
   decrementItemQuantity: (productToDecrement) => {},
+  deleteItemFromCart: (productToDelete) => {},
   totalQuantity: 0,
   totalPrice: 0,
 });
@@ -108,10 +132,22 @@ export const CartProvider = ({ children }) => {
   };
 
   const decrementItemQuantity = (productToDecrement) => {
+    // decrement item quantity from cart
+    // if quantity === 1 => delete item from cart
     setCartItems(decrementCartItem(cartItems, productToDecrement));
     setTotalQuantity((prevState) => prevState - 1);
     setTotalPrice(
       (prevTotalPrice) => prevTotalPrice - productToDecrement.price
+    );
+  };
+
+  const deleteItemFromCart = (productToDelete) => {
+    // completely delete item from cart
+    setCartItems(deleteCartItem(cartItems, productToDelete));
+    setTotalQuantity((prevState) => prevState - productToDelete.quantity);
+    setTotalPrice(
+      (prevTotalPrice) =>
+        prevTotalPrice - productToDelete.quantity * productToDelete.price
     );
   };
 
@@ -120,6 +156,7 @@ export const CartProvider = ({ children }) => {
     setIsCartOpen,
     addItemToCart,
     decrementItemQuantity,
+    deleteItemFromCart,
     cartItems,
     totalQuantity,
     totalPrice,

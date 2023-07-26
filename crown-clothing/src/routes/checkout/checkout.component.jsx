@@ -8,8 +8,13 @@ const Checkout = () => {
     // decrement product quantity
     cartCtx.decrementItemQuantity(product);
   };
+
   const increment = (product) => {
     cartCtx.addItemToCart(product);
+  };
+
+  const deleteProduct = (product) => {
+    cartCtx.deleteItemFromCart(product);
   };
 
   return (
@@ -23,7 +28,7 @@ const Checkout = () => {
           <span> {product.quantity} </span>
           <button onClick={() => increment(product)}>increment {">"}</button>
           <span>${product.price * product.quantity}</span>
-          <button>X</button>
+          <button onClick={() => deleteProduct(product)}>X</button>
         </div>
       ))}
       <h2>TOTAL PRICE: ${cartCtx.totalPrice}</h2>
