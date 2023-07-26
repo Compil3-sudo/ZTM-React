@@ -37,11 +37,47 @@ const addCartItem = (cartItems, productToAdd) => {
   return newCartItems;
 };
 
+const decrementCartItem = (cartItems, productToDecrement) => {
+  // decrease item quantity, OR remove if quantity === 1
+  // this should only be called on existing cart items
+  const productIndex = cartItems.findIndex(
+    (product) => product.id === productToDecrement.id
+  );
+
+  const existingProduct = cartItems[productIndex];
+
+  if (!existingProduct) {
+    console.log(
+      "ERROR: This function should only be called on existing cart items!"
+    );
+    return;
+  }
+
+  const updatedProduct = {
+    ...productToDecrement,
+    quantity: productToDecrement.quantity - 1,
+  };
+
+  // when product.quantity is 1 => 0 after decrement => remove item from cart
+  if (productToDecrement.quantity === 1) {
+    let updatedCartItems = cartItems.filter(
+      (product) => product.id !== productToDecrement.id
+    );
+    return updatedCartItems;
+  }
+
+  let updatedCartItems = [...cartItems];
+  updatedCartItems[productIndex] = updatedProduct;
+
+  return updatedCartItems;
+};
+
 export const CartContext = createContext({
   isCartOpen: false,
   setIsCartOpen: () => {},
   cartItems: [],
   addItemToCart: (productToAdd) => {},
+  decrementItemQuantity: (productToDecrement) => {},
   totalQuantity: 0,
   totalPrice: 0,
 });
@@ -71,10 +107,19 @@ export const CartProvider = ({ children }) => {
     setTotalPrice((prevTotalPrice) => prevTotalPrice + productToAdd.price);
   };
 
+  const decrementItemQuantity = (productToDecrement) => {
+    setCartItems(decrementCartItem(cartItems, productToDecrement));
+    setTotalQuantity((prevState) => prevState - 1);
+    setTotalPrice(
+      (prevTotalPrice) => prevTotalPrice - productToDecrement.price
+    );
+  };
+
   const cartContextValues = {
     isCartOpen,
     setIsCartOpen,
     addItemToCart,
+    decrementItemQuantity,
     cartItems,
     totalQuantity,
     totalPrice,
