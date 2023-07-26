@@ -8,8 +8,6 @@ import {
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import "./sign-in-form.styles.scss";
-import { useContext } from "react";
-import { UserContext } from "../context/user-context.component";
 
 const defaultFormFields = {
   email: "",
@@ -19,8 +17,6 @@ const defaultFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
-
-  const userCtx = useContext(UserContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -34,10 +30,7 @@ const SignInForm = () => {
 
   const signInWithGoogle = async () => {
     try {
-      const { user } = await signinWithGoolePopup();
-      const userDocRef = await createUserDocumentFromAuth(user);
-
-      userCtx.setCurrentUser(user);
+      await signinWithGoolePopup();
     } catch (error) {
       console.log(error);
     }
@@ -51,8 +44,6 @@ const SignInForm = () => {
         email,
         password
       );
-
-      userCtx.setCurrentUser(response.user);
 
       resetFormFields();
     } catch (error) {
