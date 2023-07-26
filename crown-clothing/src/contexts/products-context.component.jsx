@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
-import DUMMY_PRODUCTS from "../shop-data.json";
+import SHOP_DATA from "../shop-data.js";
+import {
+  addCollectionAndDocuments,
+  getCategoriesAndDocuments,
+} from "../utils/firebase.utils.js";
 
 export const ProductsContext = createContext({
   products: [],
@@ -9,11 +13,24 @@ export const ProductsContext = createContext({
 });
 
 export const ProductsProvider = ({ children }) => {
-  const [products, setProducts] = useState(DUMMY_PRODUCTS);
-  const value = { products, setProducts };
+  const [products, setProducts] = useState([]);
+  const productsContextValues = { products, setProducts };
+
+  // only do this once to init firebase database with shop data
+  // useEffect(() => {
+  //   addCollectionAndDocuments("categories", SHOP_DATA);
+  // }, []);
+
+  // useEffect(() => {
+  //   const getCategoriesMap = async () => {
+  //     const categoryMap = await getCategoriesAndDocuments();
+  //     console.log(categoryMap);
+  //   };
+  //   getCategoriesMap();
+  // }, []);
 
   return (
-    <ProductsContext.Provider value={value}>
+    <ProductsContext.Provider value={productsContextValues}>
       {children}
     </ProductsContext.Provider>
   );

@@ -13,7 +13,7 @@ export const UserContext = createContext({
 
 export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const value = { currentUser, setCurrentUser };
+  const userContextValues = { currentUser, setCurrentUser };
 
   useEffect(() => {
     // stop listening
@@ -28,5 +28,9 @@ export const UserProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={userContextValues}>
+      {children}
+    </UserContext.Provider>
+  );
 };
