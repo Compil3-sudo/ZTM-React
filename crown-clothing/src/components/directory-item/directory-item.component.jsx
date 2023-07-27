@@ -4,7 +4,6 @@ import React from "react";
 
 const DirectoryItem = (props) => {
   const category = props.category;
-
   const navigate = useNavigate();
 
   const redirectToDirectory = () => {
