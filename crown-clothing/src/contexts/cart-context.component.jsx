@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useState } from "react";
+import React, { createContext, useReducer } from "react";
 
 const addCartItem = (state, productToAdd) => {
   // find if cartItems contains productToAdd
@@ -65,12 +65,21 @@ const decrementCartItem = (state, productToDecrement) => {
     return;
   }
 
+  const newTotalQuantity = state.totalQuantity - 1;
+  const newTotalPrice = state.totalPrice - productToDecrement.price;
+
   // when product.quantity is 1 => 0 after decrement => remove item from cart
   if (productToDecrement.quantity === 1) {
-    let updatedCartItems = cartItems.filter(
+    const updatedCartItems = cartItems.filter(
       (product) => product.id !== productToDecrement.id
     );
-    return updatedCartItems;
+
+    return {
+      ...state,
+      cartItems: updatedCartItems,
+      totalQuantity: newTotalQuantity,
+      totalPrice: newTotalPrice,
+    };
   }
 
   const updatedProduct = {
@@ -78,11 +87,8 @@ const decrementCartItem = (state, productToDecrement) => {
     quantity: productToDecrement.quantity - 1,
   };
 
-  let updatedCartItems = [...cartItems];
+  const updatedCartItems = [...cartItems];
   updatedCartItems[productIndex] = updatedProduct;
-
-  const newTotalQuantity = state.totalQuantity - 1;
-  const newTotalPrice = state.totalPrice - productToDecrement.price;
 
   return {
     ...state,
