@@ -1,7 +1,9 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useReducer, useState } from "react";
 
-const addCartItem = (cartItems, productToAdd) => {
+const addCartItem = (state, productToAdd) => {
   // find if cartItems contains productToAdd
+  const cartItems = state.cartItems;
+
   const existingProductIndex = cartItems.findIndex(
     (product) => product.id === productToAdd.id
   );
@@ -34,12 +36,22 @@ const addCartItem = (cartItems, productToAdd) => {
   }
 
   // return new array with modified cartItems/ new cart item
-  return newCartItems;
+  const newTotalQuantity = state.totalQuantity + 1;
+  const newTotalPrice = state.totalPrice + productToAdd.price;
+
+  return {
+    ...state,
+    cartItems: newCartItems,
+    totalQuantity: newTotalQuantity,
+    totalPrice: newTotalPrice,
+  };
 };
 
-const decrementCartItem = (cartItems, productToDecrement) => {
+const decrementCartItem = (state, productToDecrement) => {
   // decrease item quantity, OR remove if quantity === 1
   // this should only be called on existing cart items
+  const cartItems = state.cartItems;
+
   const productIndex = cartItems.findIndex(
     (product) => product.id === productToDecrement.id
   );
@@ -69,12 +81,22 @@ const decrementCartItem = (cartItems, productToDecrement) => {
   let updatedCartItems = [...cartItems];
   updatedCartItems[productIndex] = updatedProduct;
 
-  return updatedCartItems;
+  const newTotalQuantity = state.totalQuantity - 1;
+  const newTotalPrice = state.totalPrice - productToDecrement.price;
+
+  return {
+    ...state,
+    cartItems: updatedCartItems,
+    totalQuantity: newTotalQuantity,
+    totalPrice: newTotalPrice,
+  };
 };
 
-const deleteCartItem = (cartItems, productToDelete) => {
+const deleteCartItem = (state, productToDelete) => {
   // completely delete an item from cart
   // should only be called on existing cart items
+  const cartItems = state.cartItems;
+
   const productIndex = cartItems.findIndex(
     (product) => product.id === productToDelete.id
   );
@@ -92,7 +114,16 @@ const deleteCartItem = (cartItems, productToDelete) => {
     (product) => product.id !== productToDelete.id
   );
 
-  return updatedCartItems;
+  const newTotalQuantity = state.totalQuantity - productToDelete.quantity;
+  const newTotalPrice =
+    state.totalPrice - productToDelete.quantity * productToDelete.price;
+
+  return {
+    ...state,
+    cartItems: updatedCartItems,
+    totalQuantity: newTotalQuantity,
+    totalPrice: newTotalPrice,
+  };
 };
 
 export const CartContext = createContext({
@@ -106,60 +137,87 @@ export const CartContext = createContext({
   totalPrice: 0,
 });
 
-export const CartProvider = ({ children }) => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [totalQuantity, setTotalQuantity] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
+const INITIAL_STATE = {
+  isCartOpen: false,
+  cartItems: [],
+  totalQuantity: 0,
+  totalPrice: 0,
+};
 
-  // method from course - why would I use useEffect for this ?
-  // I just update the quantity inside the addItemToCart function
-  // useEffect(() => {
-  //   // reduce arguments - callback function, stating value
-  //   const newCartQuantity = cartItems.reduce(
-  //     (total, cartItem) => total + cartItem.quantity,
-  //     0
-  //   );
-  //   setTotalQuantity(newCartQuantity);
-  // }, [cartItems]);
+const CART_ACTION_TYPES = {
+  ADD_ITEM_TO_CART: "ADD_ITEM_TO_CART",
+  DECREMENT_CART_ITEM: "DECREMENT_CART_ITEM",
+  DELETE_CART_ITEM: "DELETE_CART_ITEM",
+  SET_IS_CART_OPEN: "SET_IS_CART_OPEN",
+};
+
+const cartReducer = (state, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    // returns new cart state
+    case CART_ACTION_TYPES.ADD_ITEM_TO_CART:
+      return addCartItem(state, payload);
+
+    case CART_ACTION_TYPES.DECREMENT_CART_ITEM:
+      return decrementCartItem(state, payload);
+
+    case CART_ACTION_TYPES.DELETE_CART_ITEM:
+      return deleteCartItem(state, payload);
+
+    case CART_ACTION_TYPES.SET_IS_CART_OPEN:
+      return {
+        ...state,
+        isCartOpen: payload,
+      };
+
+    default:
+      throw new Error(`Unhandled type of ${type} in cartReducer`);
+  }
+};
+
+export const CartProvider = ({ children }) => {
+  const [cartState, dispatch] = useReducer(cartReducer, INITIAL_STATE);
 
   const addItemToCart = (productToAdd) => {
     // add completely new product
     // or increase quantity to existing product
-    setCartItems(addCartItem(cartItems, productToAdd));
-    setTotalQuantity((prevState) => prevState + 1);
-    setTotalPrice((prevTotalPrice) => prevTotalPrice + productToAdd.price);
+    dispatch({
+      type: CART_ACTION_TYPES.ADD_ITEM_TO_CART,
+      payload: productToAdd,
+    });
   };
 
   const decrementItemQuantity = (productToDecrement) => {
     // decrement item quantity from cart
     // if quantity === 1 => delete item from cart
-    setCartItems(decrementCartItem(cartItems, productToDecrement));
-    setTotalQuantity((prevState) => prevState - 1);
-    setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice - productToDecrement.price
-    );
+    dispatch({
+      type: CART_ACTION_TYPES.DECREMENT_CART_ITEM,
+      payload: productToDecrement,
+    });
   };
 
   const deleteItemFromCart = (productToDelete) => {
     // completely delete item from cart
-    setCartItems(deleteCartItem(cartItems, productToDelete));
-    setTotalQuantity((prevState) => prevState - productToDelete.quantity);
-    setTotalPrice(
-      (prevTotalPrice) =>
-        prevTotalPrice - productToDelete.quantity * productToDelete.price
-    );
+    dispatch({
+      type: CART_ACTION_TYPES.DELETE_CART_ITEM,
+      payload: productToDelete,
+    });
+  };
+
+  const setIsCartOpen = (openStatus) => {
+    dispatch({ type: CART_ACTION_TYPES.SET_IS_CART_OPEN, payload: openStatus });
   };
 
   const cartContextValues = {
-    isCartOpen,
+    isCartOpen: cartState.isCartOpen,
     setIsCartOpen,
     addItemToCart,
     decrementItemQuantity,
     deleteItemFromCart,
-    cartItems,
-    totalQuantity,
-    totalPrice,
+    cartItems: cartState.cartItems,
+    totalQuantity: cartState.totalQuantity,
+    totalPrice: cartState.totalPrice,
   };
 
   return (
