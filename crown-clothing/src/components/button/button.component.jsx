@@ -7,7 +7,7 @@ import {
 
 export const BUTTON_TYPE_CLASSES = {
   base: "base",
-  google: "google",
+  google: "google-sign-in",
   inverted: "inverted",
 };
 
