@@ -7,15 +7,16 @@ import {
   NavLink,
   LogoContainer,
 } from "./navigation.styles";
-import { UserContext } from "../../contexts/user-context.component";
 import { useContext } from "react";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
 import { CartContext } from "../../contexts/cart-context.component";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../store/user/user-selector";
 
 const Navigation = () => {
-  const userCtx = useContext(UserContext);
+  const currentUser = useSelector(selectCurrentUser);
   const cartCtx = useContext(CartContext);
 
   return (
@@ -26,13 +27,15 @@ const Navigation = () => {
         </LogoContainer>
         <NavLinks>
           <NavLink to="/shop">SHOP</NavLink>
-          {userCtx.currentUser ? (
+
+          {currentUser ? (
             <NavLink as="span" onClick={signOutUser}>
               SIGN OUT
             </NavLink>
           ) : (
             <NavLink to="/auth">SIGN IN</NavLink>
           )}
+
           <CartIcon />
         </NavLinks>
         {cartCtx.isCartOpen && <CartDropdown />}

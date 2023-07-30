@@ -6,8 +6,30 @@ import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import Category from "./routes/category/category.component";
 import CategoriesPreview from "./routes/categories-preview/categories-preview.component";
+import { useEffect } from "react";
+import {
+  createUserDocumentFromAuth,
+  onAuthStateChangedListener,
+} from "./utils/firebase/firebase.utils";
+import { setCurrentUser } from "./store/user/user-actions";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // stop listening
+    // unsubscribe when you unmount
+    const unsubscribe = onAuthStateChangedListener((user) => {
+      if (user) {
+        createUserDocumentFromAuth(user);
+      }
+      dispatch(setCurrentUser(user));
+    });
+
+    return unsubscribe;
+  }, [dispatch]); // don't actually need the dispatch dependecy
+
   const router = createBrowserRouter([
     {
       path: "/",
