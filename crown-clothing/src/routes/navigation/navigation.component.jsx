@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { ReactComponent as CrownLogo } from "../../assets/crown.svg";
 import {
@@ -17,6 +17,16 @@ import { CartContext } from "../../contexts/cart-context.component";
 const Navigation = () => {
   const userCtx = useContext(UserContext);
   const cartCtx = useContext(CartContext);
+
+  // useEffect(() => {
+  //   const awaitUserStatus = setTimeout(() => {
+  //     console.log("awaiting user status");
+  //   }, 500);
+
+  //   return () => {
+  //     clearTimeout(awaitUserStatus);
+  //   };
+  // }, []);
 
   return (
     <>
