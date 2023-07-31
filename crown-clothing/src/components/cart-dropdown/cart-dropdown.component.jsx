@@ -9,30 +9,39 @@ import {
   CartItems,
   EmptyMessage,
 } from "./cart-dropdown.styles";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCartItems,
+  selectCartTotalPrice,
+  selectIsCartOpen,
+} from "../../store/cart/cart-selector";
+import { setIsCartOpen } from "../../store/cart/cart-actions";
 
 const CartDropdown = () => {
-  const cartCtx = useContext(CartContext);
+  // const cartCtx = useContext(CartContext);
+  const isCartOpen = useSelector(selectIsCartOpen);
+  const cartItems = useSelector(selectCartItems);
+  const totalPrice = useSelector(selectCartTotalPrice);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const goToCheckoutHandler = () => {
-    cartCtx.setIsCartOpen(!cartCtx.isCartOpen);
+    // cartCtx.setIsCartOpen(!cartCtx.isCartOpen);
+    dispatch(setIsCartOpen(!isCartOpen));
     navigate("/checkout");
   };
 
   return (
     <CartDropdownContaier>
       <CartItems>
-        {cartCtx.cartItems.length ? (
-          cartCtx.cartItems.map((item) => (
-            <CartItem key={item.id} cartItem={item} />
-          ))
+        {cartItems.length ? (
+          cartItems.map((item) => <CartItem key={item.id} cartItem={item} />)
         ) : (
           <EmptyMessage>Your cart is empty</EmptyMessage>
         )}
       </CartItems>
-      <span style={{ margin: "0.5rem 0 1rem 0" }}>
-        TOTAL: ${cartCtx.totalPrice}
-      </span>
+      <span style={{ margin: "0.5rem 0 1rem 0" }}>TOTAL: ${totalPrice}</span>
 
       <Button onClick={goToCheckoutHandler}>GO TO CHECKOUT</Button>
     </CartDropdownContaier>

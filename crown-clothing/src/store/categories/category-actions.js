@@ -1,11 +1,11 @@
 export const CATEGORY_ACTION_TYPES = {
-  SET_CATEGORIES_MAP: "SET_CATEGORIES_MAP",
+  SET_CATEGORIES: "categories/SET_CATEGORIES",
 };
 
-export const setCategoriesMap = (categoriesMap) => {
+export const setCategories = (categoriesArray) => {
   // create Action
   return {
-    type: CATEGORY_ACTION_TYPES.SET_CATEGORIES_MAP,
-    payload: categoriesMap,
+    type: CATEGORY_ACTION_TYPES.SET_CATEGORIES,
+    payload: categoriesArray,
   };
 };
