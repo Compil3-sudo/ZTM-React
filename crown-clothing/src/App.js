@@ -11,23 +11,27 @@ import {
   createUserDocumentFromAuth,
   onAuthStateChangedListener,
 } from "./utils/firebase/firebase.utils";
-import { setCurrentUser } from "./store/user/user-actions";
+import { checkUserSession, setCurrentUser } from "./store/user/user-actions";
 import { useDispatch } from "react-redux";
 
 function App() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // stop listening
-    // unsubscribe when you unmount
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        createUserDocumentFromAuth(user);
-      }
-      dispatch(setCurrentUser(user));
-    });
+  // useEffect(() => {
+  //   // stop listening
+  //   // unsubscribe when you unmount
+  //   const unsubscribe = onAuthStateChangedListener((user) => {
+  //     if (user) {
+  //       createUserDocumentFromAuth(user);
+  //     }
+  //     dispatch(setCurrentUser(user));
+  //   });
 
-    return unsubscribe;
+  //   return unsubscribe;
+  // }, [dispatch]); // don't actually need the dispatch dependecy
+
+  useEffect(() => {
+    dispatch(checkUserSession());
   }, [dispatch]); // don't actually need the dispatch dependecy
 
   const router = createBrowserRouter([

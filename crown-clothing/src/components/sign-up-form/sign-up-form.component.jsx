@@ -8,6 +8,8 @@ import FormInput from "../form-input/form-input.component";
 import "./sign-up-form.styles.scss";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUpStart } from "../../store/user/user-actions";
 
 const defaultFormFields = {
   displayName: "",
@@ -20,6 +22,7 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -40,14 +43,17 @@ const SignUpForm = () => {
     }
 
     try {
-      const response = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      // const response = await createAuthUserWithEmailAndPassword(
+      //   email,
+      //   password
+      // );
 
-      const { user } = response;
+      // const { user } = response;
 
-      await createUserDocumentFromAuth(user, { displayName });
+      // await createUserDocumentFromAuth(user, { displayName });
+
+      dispatch(signUpStart(email, password, { displayName }));
+
       resetFormFields();
       navigate("/");
     } catch (error) {

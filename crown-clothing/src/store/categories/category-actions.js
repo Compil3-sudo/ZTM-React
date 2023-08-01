@@ -25,13 +25,13 @@ export const fetchCategoriesFailed = (error) => {
 };
 
 // this is a THUNK action => declare with last word Async
-export const fetchCategoriesAsync = () => async (dispatch) => {
-  dispatch(fetchCategoriesStart());
+// export const fetchCategoriesAsync = () => async (dispatch) => {
+//   dispatch(fetchCategoriesStart());
 
-  try {
-    const categoriesArray = await getCategoriesAndDocuments("categories");
-    dispatch(fetchCategoriesSuccess(categoriesArray));
-  } catch (error) {
-    dispatch(fetchCategoriesFailed(error));
-  }
-};
+//   try {
+//     const categoriesArray = await getCategoriesAndDocuments("categories");
+//     dispatch(fetchCategoriesSuccess(categoriesArray));
+//   } catch (error) {
+//     dispatch(fetchCategoriesFailed(error));
+//   }
+// };

@@ -8,6 +8,11 @@ import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import "./sign-in-form.styles.scss";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  emailSignInStart,
+  googleSignInStart,
+} from "../../store/user/user-actions";
 
 const defaultFormFields = {
   email: "",
@@ -18,6 +23,7 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,8 +37,10 @@ const SignInForm = () => {
 
   const signInWithGoogle = async () => {
     try {
-      await signinWithGoolePopup();
-      navigate("/");
+      // await signinWithGoolePopup();
+      dispatch(googleSignInStart());
+
+      // navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -42,10 +50,12 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      // const response = await signInAuthUserWithEmailAndPassword(
+      //   email,
+      //   password
+      // );
+
+      dispatch(emailSignInStart(email, password));
 
       resetFormFields();
       navigate("/");
