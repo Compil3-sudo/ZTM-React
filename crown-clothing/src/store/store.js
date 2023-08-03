@@ -2,16 +2,16 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
-// import { persistStore, persistReducer } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-// const persistConfig = {
-//   key: "root",
-//   storage,
-//   blacklist: ["user"],
-// };
+const persistConfig = {
+  key: "root",
+  storage,
+  blacklist: ["user"],
+};
 
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
+export const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // const loggerMiddleware = (store) => (next) => (action) => {
 //   if (!action.type) {
@@ -43,7 +43,7 @@ const middleWares = [process.env.NODE_ENV !== "production" && logger].filter(
 // REDUX-THUNK IS INCLUDED BY DEFAULT
 // IF I MODIFY MIDDLWARE IT WILL REMOVE REDUX-THUNK
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   // middleware: middleWares,
 
   // HOW TO USE DEFAULT MIDDLEWARE & MY OWN without SERIALITABLECHECK
@@ -53,4 +53,4 @@ export const store = configureStore({
     }).concat(middleWares),
 });
 
-// export const persistor = persistStore(store);
+export const persistor = persistStore(store);
