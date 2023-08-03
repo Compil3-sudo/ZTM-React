@@ -52,6 +52,12 @@ const PaymentForm = () => {
     } else {
       if (paymentResult.paymentIntent.status === "succeeded") {
         alert("Payment Successful!");
+
+        // TODO: clear cart
+        // redirect to home
+        // TODO: add loading spinner to categories
+        // TODO: fetch categories async
+        // deploy to netlify
       }
     }
   };
