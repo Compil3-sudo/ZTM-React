@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { CartContext } from "../../contexts/cart-context.component";
+import React from "react";
 import "./checkout-item.styles.scss";
 import { useDispatch } from "react-redux";
 import {
@@ -9,7 +8,6 @@ import {
 } from "../../store/cart/cart-reducer";
 
 const CheckoutItem = ({ cartItem }) => {
-  // const cartCtx = useContext(CartContext);
   const dispatch = useDispatch();
 
   const decrementCartItemHandler = () => {
