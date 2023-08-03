@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
-import { setCategories } from "../../store/categories/category-actions";
+import { setCategories } from "../../store/categories/category-reducer";
 import { useDispatch } from "react-redux";
 
 const Shop = () => {

@@ -3,7 +3,7 @@ import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import "./product-card.styles.scss";
 import { CartContext } from "../../contexts/cart-context.component";
 import { useDispatch } from "react-redux";
-import { addItemToCart } from "../../store/cart/cart-actions";
+import { addItemToCart } from "../../store/cart/cart-reducer";
 
 const ProductCard = ({ product }) => {
   // const cartCtx = useContext(CartContext);

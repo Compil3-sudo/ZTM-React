@@ -7,7 +7,7 @@ import {
   selectCartTotalQuantity,
   selectIsCartOpen,
 } from "../../store/cart/cart-selector";
-import { setIsCartOpen } from "../../store/cart/cart-actions";
+import { setIsCartOpen } from "../../store/cart/cart-reducer";
 
 const CartIcon = () => {
   // const cartCtx = useContext(CartContext);

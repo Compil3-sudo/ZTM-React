@@ -11,8 +11,8 @@ import {
   createUserDocumentFromAuth,
   onAuthStateChangedListener,
 } from "./utils/firebase/firebase.utils";
-import { setCurrentUser } from "./store/user/user-actions";
 import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./store/user/user-reducer";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +23,14 @@ function App() {
     const unsubscribe = onAuthStateChangedListener((user) => {
       if (user) {
         createUserDocumentFromAuth(user);
+        // MY APPROACH:
+        user = { accessToken: user.accessToken, email: user.email };
       }
+
+      // FROM COURSE: WTF ??
+      const pickedUser =
+        user && (({ accessToken, email }) => ({ accessToken, email }))(user);
+
       dispatch(setCurrentUser(user));
     });
 

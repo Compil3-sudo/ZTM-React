@@ -15,7 +15,7 @@ import {
   selectCartTotalPrice,
   selectIsCartOpen,
 } from "../../store/cart/cart-selector";
-import { setIsCartOpen } from "../../store/cart/cart-actions";
+import { setIsCartOpen } from "../../store/cart/cart-reducer";
 
 const CartDropdown = () => {
   // const cartCtx = useContext(CartContext);

@@ -6,7 +6,7 @@ import {
   addItemToCart,
   decrementItemQuantity,
   deleteItemFromCart,
-} from "../../store/cart/cart-actions";
+} from "../../store/cart/cart-reducer";
 
 const CheckoutItem = ({ cartItem }) => {
   // const cartCtx = useContext(CartContext);

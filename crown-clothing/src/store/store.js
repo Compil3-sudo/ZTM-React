@@ -1,16 +1,17 @@
-import { compose, createStore, applyMiddleware } from "redux";
+// import { compose, createStore, applyMiddleware } from "redux";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+// import { persistStore, persistReducer } from "redux-persist";
+// import storage from "redux-persist/lib/storage";
 
-const persistConfig = {
-  key: "root",
-  storage,
-  blacklist: ["user"],
-};
+// const persistConfig = {
+//   key: "root",
+//   storage,
+//   blacklist: ["user"],
+// };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // const loggerMiddleware = (store) => (next) => (action) => {
 //   if (!action.type) {
@@ -32,17 +33,24 @@ const middleWares = [process.env.NODE_ENV !== "production" && logger].filter(
   Boolean
 );
 
-const composeEnhancer =
-  (process.env.NODE_ENV !== "production" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+// const composeEnhancer =
+//   (process.env.NODE_ENV !== "production" &&
+//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+//   compose;
 
-const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
+// const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
-export const store = createStore(
-  persistedReducer,
-  undefined,
-  composedEnhancers
-);
+// REDUX-THUNK IS INCLUDED BY DEFAULT
+// IF I MODIFY MIDDLWARE IT WILL REMOVE REDUX-THUNK
+export const store = configureStore({
+  reducer: rootReducer,
+  // middleware: middleWares,
 
-export const persistor = persistStore(store);
+  // HOW TO USE DEFAULT MIDDLEWARE & MY OWN without SERIALITABLECHECK
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      // serializableCheck: false,
+    }).concat(middleWares),
+});
+
+// export const persistor = persistStore(store);
