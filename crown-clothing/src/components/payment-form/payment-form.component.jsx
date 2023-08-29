@@ -6,9 +6,11 @@ import {
   PaymentButton,
   PaymentFormContainer,
 } from "./payment-form.styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCartTotalPrice } from "../../store/cart/cart-selector";
 import { selectCurrentUser } from "../../store/user/user-selector";
+import { clearCartItems } from "../../store/cart/cart-reducer";
+import { useNavigate } from "react-router-dom";
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -16,6 +18,8 @@ const PaymentForm = () => {
   const amount = useSelector(selectCartTotalPrice);
   const currentUser = useSelector(selectCurrentUser);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const paymentHandler = async (event) => {
     event.preventDefault();
@@ -48,13 +52,14 @@ const PaymentForm = () => {
     setIsProcessingPayment(false);
 
     if (paymentResult.error) {
-      alert(paymentResult.error);
+      alert(paymentResult.error.message);
     } else {
       if (paymentResult.paymentIntent.status === "succeeded") {
         alert("Payment Successful!");
 
-        // TODO: clear cart
-        // redirect to home
+        dispatch(clearCartItems());
+        navigate("/");
+
         // TODO: add loading spinner to categories
         // TODO: fetch categories async
         // deploy to netlify

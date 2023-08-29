@@ -66,6 +66,13 @@ export const deleteCartItem = (state, productToDelete) => {
     state.totalPrice - productToDelete.quantity * productToDelete.price;
 };
 
+export const clearCart = (state) => {
+  state.totalPrice = 0;
+  state.totalQuantity = 0;
+  state.isCartOpen = false;
+  state.cartItems = [];
+};
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState: CART_INITIAL_STATE,
@@ -79,6 +86,9 @@ export const cartSlice = createSlice({
     deleteItemFromCart(state, action) {
       deleteCartItem(state, action.payload);
     },
+    clearCartItems(state, action) {
+      clearCart(state);
+    },
     setIsCartOpen(state, action) {
       state.isCartOpen = action.payload;
     },
@@ -90,6 +100,7 @@ export const {
   addItemToCart,
   decrementItemQuantity,
   deleteItemFromCart,
+  clearCartItems,
 } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;
