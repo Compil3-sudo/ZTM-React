@@ -1,10 +1,4 @@
-import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
-
-export const CATEGORY_ACTION_TYPES = {
-  FETCH_CATEGORIES_START: "category/FETCH_CATEGORIES_START",
-  FETCH_CATEGORIES_SUCCESS: "category/FETCH_CATEGORIES_SUCCESS",
-  FETCH_CATEGORIES_FAILED: "category/FETCH_CATEGORIES_FAILED",
-};
+import { CATEGORY_ACTION_TYPES } from "./category.types";
 
 export const fetchCategoriesStart = () => {
   return { type: CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_START };
@@ -23,15 +17,3 @@ export const fetchCategoriesFailed = (error) => {
     payload: error,
   };
 };
-
-// this is a THUNK action => declare with last word Async
-// export const fetchCategoriesAsync = () => async (dispatch) => {
-//   dispatch(fetchCategoriesStart());
-
-//   try {
-//     const categoriesArray = await getCategoriesAndDocuments("categories");
-//     dispatch(fetchCategoriesSuccess(categoriesArray));
-//   } catch (error) {
-//     dispatch(fetchCategoriesFailed(error));
-//   }
-// };
