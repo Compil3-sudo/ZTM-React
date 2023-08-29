@@ -59,10 +59,6 @@ const PaymentForm = () => {
 
         dispatch(clearCartItems());
         navigate("/");
-
-        // TODO: add loading spinner to categories
-        // TODO: fetch categories async
-        // deploy to netlify
       }
     }
   };
