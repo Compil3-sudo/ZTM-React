@@ -1,11 +1,15 @@
-export const CART_ACTION_TYPES = {
-  ADD_ITEM_TO_CART: "cart/ADD_ITEM_TO_CART",
-  DECREMENT_CART_ITEM: "cart/DECREMENT_CART_ITEM",
-  DELETE_CART_ITEM: "cart/DELETE_CART_ITEM",
-  SET_IS_CART_OPEN: "cart/SET_IS_CART_OPEN",
-};
+import { CART_ACTION_TYPES, CartItem } from "./cart.types";
+import {
+  createAction,
+  withMatcher,
+  ActionWithPayload,
+} from "../../utils/reducer/reducer.utils";
+import { CartState } from "./cart-reducer";
 
-export const addCartItem = (state, productToAdd) => {
+export const addCartItem = (
+  state: CartState,
+  productToAdd: CartItem
+): CartState => {
   // find if cartItems contains productToAdd
   const cartItems = state.cartItems;
 
@@ -43,7 +47,10 @@ export const addCartItem = (state, productToAdd) => {
   };
 };
 
-export const decrementCartItem = (state, productToDecrement) => {
+export const decrementCartItem = (
+  state: CartState,
+  productToDecrement: CartItem
+): CartState => {
   // decrease item quantity, OR remove if quantity === 1
   const cartItems = state.cartItems;
 
@@ -84,7 +91,10 @@ export const decrementCartItem = (state, productToDecrement) => {
   };
 };
 
-export const deleteCartItem = (state, productToDelete) => {
+export const deleteCartItem = (
+  state: CartState,
+  productToDelete: CartItem
+): CartState => {
   // completely delete an item from cart
   const cartItems = state.cartItems;
   let updatedCartItems = cartItems.filter(
@@ -103,32 +113,47 @@ export const deleteCartItem = (state, productToDelete) => {
   };
 };
 
-export const addItemToCart = (productToAdd) => {
-  // add completely new product
-  // or increase quantity to existing product
-  return {
-    type: CART_ACTION_TYPES.ADD_ITEM_TO_CART,
-    payload: productToAdd,
-  };
-};
+// ACTION TYPES
+export type SetIsCartOpen = ActionWithPayload<
+  CART_ACTION_TYPES.SET_IS_CART_OPEN,
+  boolean
+>;
 
-export const decrementItemQuantity = (productToDecrement) => {
-  // decrement item quantity from cart
-  // if quantity === 1 => delete item from cart
-  return {
-    type: CART_ACTION_TYPES.DECREMENT_CART_ITEM,
-    payload: productToDecrement,
-  };
-};
+export type AddCartItem = ActionWithPayload<
+  CART_ACTION_TYPES.ADD_ITEM_TO_CART,
+  CartItem
+>;
+export type DecrementCartItem = ActionWithPayload<
+  CART_ACTION_TYPES.DECREMENT_CART_ITEM,
+  CartItem
+>;
+export type DeleteCartItem = ActionWithPayload<
+  CART_ACTION_TYPES.DELETE_CART_ITEM,
+  CartItem
+>;
 
-export const deleteItemFromCart = (productToDelete) => {
-  // completely delete item from cart
-  return {
-    type: CART_ACTION_TYPES.DELETE_CART_ITEM,
-    payload: productToDelete,
-  };
-};
+// CART ACTIONS
+export const addItemToCart = withMatcher(
+  (productToAdd: CartItem): AddCartItem =>
+    // add completely new product
+    // or increase quantity to existing product
+    createAction(CART_ACTION_TYPES.ADD_ITEM_TO_CART, productToAdd)
+);
 
-export const setIsCartOpen = (openStatus) => {
-  return { type: CART_ACTION_TYPES.SET_IS_CART_OPEN, payload: openStatus };
-};
+export const decrementItemQuantity = withMatcher(
+  (productToDecrement: CartItem): DecrementCartItem =>
+    // decrement item quantity from cart
+    // if quantity === 1 => delete item from cart
+    createAction(CART_ACTION_TYPES.DECREMENT_CART_ITEM, productToDecrement)
+);
+
+export const deleteItemFromCart = withMatcher(
+  (productToDelete: CartItem): DeleteCartItem =>
+    // completely delete item from cart
+    createAction(CART_ACTION_TYPES.DELETE_CART_ITEM, productToDelete)
+);
+
+export const setIsCartOpen = withMatcher(
+  (openStatus: boolean): SetIsCartOpen =>
+    createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, openStatus)
+);
