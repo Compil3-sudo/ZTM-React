@@ -1,7 +1,7 @@
-import { compose, createStore, applyMiddleware } from "redux";
-import logger from "redux-logger";
+import { compose, createStore, applyMiddleware, Middleware } from "redux";
+// import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
-import { persistStore, persistReducer } from "redux-persist";
+import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "./root-saga";
@@ -14,7 +14,11 @@ declare global {
   }
 }
 
-const persistConfig = {
+type ExtendedPersistConfig = PersistConfig<RootState> & {
+  whitelist: (keyof RootState)[];
+};
+
+const persistConfig: ExtendedPersistConfig = {
   key: "root",
   storage,
   whitelist: ["cart"],
@@ -24,23 +28,35 @@ const sagaMiddleware = createSagaMiddleware();
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleWares = [
-  process.env.NODE_ENV !== "production" && logger,
-  // thunk,
-  sagaMiddleware, // use EITHER thunk or saga NOT both
-].filter(Boolean);
+// HAVE FUN WITH YOUR REDUX SAGA MATE.
+// can't install redux-logger with typescript
+// can't even user middleware
 
-const composeEnhancer =
-  (process.env.NODE_ENV !== "production" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+// A type predicate's type must be assignable to its parameter's type.
+// Type 'Middleware<{}, any, Dispatch<AnyAction>>' is not assignable to type 'boolean | SagaMiddleware<object>'.
+//   Type 'Middleware<{}, any, Dispatch<AnyAction>>' is missing the following properties from type 'SagaMiddleware<object>': run, setContextts(2677)
 
-const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
+// const middleWares = [
+//   process.env.NODE_ENV !== "production",
+//   sagaMiddleware,
+// ].filter((middleware): middleware is Middleware => Boolean(middleware));
 
+// const composeEnhancer =
+//   (process.env.NODE_ENV !== "production" &&
+//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+//   compose;
+
+// const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
+
+// export const store = createStore(
+//   persistedReducer,
+//   undefined,
+//   composedEnhancers
+// );
 export const store = createStore(
   persistedReducer,
   undefined,
-  composedEnhancers
+  applyMiddleware(sagaMiddleware)
 );
 
 sagaMiddleware.run(rootSaga);
