@@ -2,6 +2,7 @@ import {
   Action,
   ActionWithPayload,
   createAction,
+  withMatcher,
 } from "../../utils/reducer/reducer.utils";
 import { CATEGORY_ACTION_TYPES, Category } from "./category.types";
 
@@ -18,19 +19,29 @@ export type FetchCategoriesFailed = ActionWithPayload<
   Error
 >;
 
+// PROBLEM: could lead to exceptions & errors.
+// this is not TYPE SAFE !!
+
 // UNION - combining types !!
-export type CategoryAction =
-  | FetchCategoriesStart
-  | FetchCategoriesSuccess
-  | FetchCategoriesFailed;
+// export type CategoryAction =
+//   | FetchCategoriesStart
+//   | FetchCategoriesSuccess
+//   | FetchCategoriesFailed;
 
-export const fetchCategoriesStart = (): FetchCategoriesStart =>
-  createAction(CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_START);
+export const fetchCategoriesStart = withMatcher(
+  (): FetchCategoriesStart =>
+    createAction(CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_START)
+);
 
-export const fetchCategoriesSuccess = (
-  categoriesArray: Category[]
-): FetchCategoriesSuccess =>
-  createAction(CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_SUCCESS, categoriesArray);
+export const fetchCategoriesSuccess = withMatcher(
+  (categoriesArray: Category[]): FetchCategoriesSuccess =>
+    createAction(
+      CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_SUCCESS,
+      categoriesArray
+    )
+);
 
-export const fetchCategoriesFailed = (error: Error): FetchCategoriesFailed =>
-  createAction(CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_FAILED, error);
+export const fetchCategoriesFailed = withMatcher(
+  (error: Error): FetchCategoriesFailed =>
+    createAction(CATEGORY_ACTION_TYPES.FETCH_CATEGORIES_FAILED, error)
+);
