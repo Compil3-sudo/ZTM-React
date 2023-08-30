@@ -11,10 +11,10 @@ import { AnyAction } from "redux";
 import { CartItem } from "./cart.types";
 
 export type CartState = {
-  cartItems: CartItem[];
-  totalQuantity: number;
-  totalPrice: number;
-  isCartOpen: boolean;
+  readonly cartItems: CartItem[];
+  readonly totalQuantity: number;
+  readonly totalPrice: number;
+  readonly isCartOpen: boolean;
 };
 
 export const CART_INITIAL_STATE: CartState = {
