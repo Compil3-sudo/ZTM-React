@@ -1,18 +1,14 @@
-import React from "react";
-import { useState } from "react";
-import {
-  signInAuthUserWithEmailAndPassword,
-  signinWithGoolePopup,
-} from "../../utils/firebase/firebase.utils";
+import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import "./sign-in-form.styles.scss";
+import "./sign-in-form.styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   emailSignInStart,
   googleSignInStart,
 } from "../../store/user/user-actions";
+import { AuthError, AuthErrorCodes } from "firebase/auth";
 
 const defaultFormFields = {
   email: "",
@@ -25,7 +21,7 @@ const SignInForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setFormFields({ ...formFields, [name]: value });
@@ -46,25 +42,22 @@ const SignInForm = () => {
     }
   };
 
-  const handlerSubmit = async (event) => {
+  const handlerSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      // const response = await signInAuthUserWithEmailAndPassword(
-      //   email,
-      //   password
-      // );
-
       dispatch(emailSignInStart(email, password));
 
       resetFormFields();
       navigate("/");
     } catch (error) {
-      switch (error.code) {
-        case "auth/wrong-password":
+      const errorCode = error as AuthError;
+
+      switch (errorCode.code) {
+        case AuthErrorCodes.INVALID_PASSWORD:
           alert("Email or password do not match");
           break;
-        case "auth/user-not-found":
+        case AuthErrorCodes.USER_DELETED:
           alert("Email does not exist");
           break;
         default:

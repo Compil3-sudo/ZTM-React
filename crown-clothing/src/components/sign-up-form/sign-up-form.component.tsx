@@ -1,11 +1,7 @@
-import React from "react";
-import { useState } from "react";
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils";
+import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../form-input/form-input.component";
-import "./sign-up-form.styles.scss";
+import { AuthError, AuthErrorCodes } from "firebase/auth";
+import "./sign-up-form.styles";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -24,7 +20,7 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setFormFields({ ...formFields, [name]: value });
@@ -34,7 +30,7 @@ const SignUpForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handlerSubmit = async (event) => {
+  const handlerSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -43,25 +39,18 @@ const SignUpForm = () => {
     }
 
     try {
-      // const response = await createAuthUserWithEmailAndPassword(
-      //   email,
-      //   password
-      // );
-
-      // const { user } = response;
-
-      // await createUserDocumentFromAuth(user, { displayName });
-
-      dispatch(signUpStart(email, password, { displayName }));
+      dispatch(signUpStart(email, password, displayName));
 
       resetFormFields();
       navigate("/");
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
+      const errorCode = error as AuthError;
+
+      if (errorCode.code === AuthErrorCodes.EMAIL_EXISTS) {
         alert("Cannot create user, email already in use");
       }
 
-      if (error.code === "auth/weak-password") {
+      if (errorCode.code === AuthErrorCodes.WEAK_PASSWORD) {
         alert("Password should be at least 6 characters long");
       }
 
