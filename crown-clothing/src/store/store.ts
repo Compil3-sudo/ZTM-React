@@ -1,5 +1,5 @@
 import { compose, createStore, applyMiddleware, Middleware } from "redux";
-// import logger from "redux-logger";
+import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
 import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -28,35 +28,22 @@ const sagaMiddleware = createSagaMiddleware();
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// HAVE FUN WITH YOUR REDUX SAGA MATE.
-// can't install redux-logger with typescript
-// can't even user middleware
+const middleWares = [
+  process.env.NODE_ENV !== "production" && logger,
+  sagaMiddleware,
+].filter((middleware): middleware is Middleware => Boolean(middleware));
 
-// A type predicate's type must be assignable to its parameter's type.
-// Type 'Middleware<{}, any, Dispatch<AnyAction>>' is not assignable to type 'boolean | SagaMiddleware<object>'.
-//   Type 'Middleware<{}, any, Dispatch<AnyAction>>' is missing the following properties from type 'SagaMiddleware<object>': run, setContextts(2677)
+const composeEnhancer =
+  (process.env.NODE_ENV !== "production" &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
 
-// const middleWares = [
-//   process.env.NODE_ENV !== "production",
-//   sagaMiddleware,
-// ].filter((middleware): middleware is Middleware => Boolean(middleware));
+const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
-// const composeEnhancer =
-//   (process.env.NODE_ENV !== "production" &&
-//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-//   compose;
-
-// const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
-
-// export const store = createStore(
-//   persistedReducer,
-//   undefined,
-//   composedEnhancers
-// );
 export const store = createStore(
   persistedReducer,
   undefined,
-  applyMiddleware(sagaMiddleware)
+  composedEnhancers
 );
 
 sagaMiddleware.run(rootSaga);
