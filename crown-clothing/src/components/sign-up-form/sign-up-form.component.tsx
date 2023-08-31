@@ -39,24 +39,8 @@ const SignUpForm = () => {
       return;
     }
 
-    try {
-      dispatch(signUpStart(email, password, displayName));
-
-      resetFormFields();
-      navigate("/");
-    } catch (error) {
-      const errorCode = error as AuthError;
-
-      if (errorCode.code === AuthErrorCodes.EMAIL_EXISTS) {
-        alert("Cannot create user, email already in use");
-      }
-
-      if (errorCode.code === AuthErrorCodes.WEAK_PASSWORD) {
-        alert("Password should be at least 6 characters long");
-      }
-
-      console.log("Could not create user", error);
-    }
+    dispatch(signUpStart(email, password, displayName));
+    resetFormFields();
   };
 
   return (

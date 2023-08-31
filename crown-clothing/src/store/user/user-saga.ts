@@ -20,7 +20,7 @@ import {
   signOutUser,
   signinWithGoolePopup,
 } from "../../utils/firebase/firebase.utils";
-import { User } from "firebase/auth";
+import { AuthError, AuthErrorCodes, User } from "firebase/auth";
 
 export function* getSnapshotFromUserAuth(
   userAuth: User,
@@ -92,6 +92,19 @@ export function* signInWithEmail({
     }
   } catch (error) {
     yield* put(signInFailed(error as Error));
+    const errorCode = error as AuthError;
+
+    switch (errorCode.code) {
+      case AuthErrorCodes.INVALID_PASSWORD:
+        alert("Email or password do not match");
+        break;
+      case AuthErrorCodes.USER_DELETED:
+        alert("Email does not exist");
+        break;
+      default:
+        alert("Could not sign in user");
+        console.log("Could not sign in user", error);
+    }
   }
 }
 
@@ -120,6 +133,16 @@ export function* signUp({
     }
   } catch (error) {
     yield* put(signUpFailed(error as Error));
+    const errorCode = error as AuthError;
+
+    if (errorCode.code === AuthErrorCodes.EMAIL_EXISTS) {
+      alert("Cannot create user, email already in use");
+    } else if (errorCode.code === AuthErrorCodes.WEAK_PASSWORD) {
+      alert("Password should be at least 6 characters long");
+    } else {
+      alert("Could not create user.");
+      console.log("Could not create user", error);
+    }
   }
 }
 
