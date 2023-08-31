@@ -6,6 +6,7 @@ import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signUpStart } from "../../store/user/user-actions";
+import { SignUpContainer } from "./sign-up-form.styles";
 
 const defaultFormFields = {
   displayName: "",
@@ -59,7 +60,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="sign-up-container">
+    <SignUpContainer>
       <h2>Don't have an account ?</h2>
       <span>Sign Up with your email and password</span>
       <form onSubmit={handlerSubmit}>
@@ -103,7 +104,7 @@ const SignUpForm = () => {
           Sign Up
         </Button>
       </form>
-    </div>
+    </SignUpContainer>
   );
 };
 

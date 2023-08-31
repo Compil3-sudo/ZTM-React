@@ -9,6 +9,7 @@ import {
   googleSignInStart,
 } from "../../store/user/user-actions";
 import { AuthError, AuthErrorCodes } from "firebase/auth";
+import { ButtonsContainer, SignInContainer } from "./sign-in-form.styles";
 
 const defaultFormFields = {
   email: "",
@@ -49,9 +50,10 @@ const SignInForm = () => {
       dispatch(emailSignInStart(email, password));
 
       resetFormFields();
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       const errorCode = error as AuthError;
+      console.log("EMAIL SIGN IN ERROR TRY CATCH");
 
       switch (errorCode.code) {
         case AuthErrorCodes.INVALID_PASSWORD:
@@ -67,7 +69,7 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="sign-in-container">
+    <SignInContainer>
       <h2>Already have an account</h2>
       <span>Sign In with your email and password</span>
       <form onSubmit={handlerSubmit}>
@@ -89,7 +91,7 @@ const SignInForm = () => {
           value={password}
         />
 
-        <div className="buttons-container">
+        <ButtonsContainer>
           <Button type="submit">Sign In</Button>
           <Button
             buttonType={BUTTON_TYPE_CLASSES.google}
@@ -98,9 +100,9 @@ const SignInForm = () => {
           >
             Google Sign In
           </Button>
-        </div>
+        </ButtonsContainer>
       </form>
-    </div>
+    </SignInContainer>
   );
 };
 

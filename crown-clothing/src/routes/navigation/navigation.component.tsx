@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import { ReactComponent as CrownLogo } from "../../assets/crown.svg";
 import {
@@ -33,7 +32,7 @@ const Navigation = () => {
           <NavLink to="/shop">SHOP</NavLink>
 
           {currentUser ? (
-            <NavLink as="span" onClick={signOut}>
+            <NavLink to="" as="span" onClick={signOut}>
               SIGN OUT
             </NavLink>
           ) : (
