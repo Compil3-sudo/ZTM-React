@@ -1,10 +1,12 @@
-.category-title {
+import styled from "styled-components";
+
+export const CategoryTitle = styled.h2`
   font-size: 38px;
   margin: 0 auto;
   text-align: center;
-}
+`;
 
-.category-container {
+export const CategoryContainer = styled.div`
   padding: 2rem 0;
   width: 90vw;
   margin: 0 auto;
@@ -12,25 +14,19 @@
   gap: 3rem 2rem;
   justify-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-}
 
-@media screen and (max-width: 1100px) {
-  .category-container {
+  @media screen and (max-width: 1100px) {
     width: 95vw;
     grid-template-columns: 1fr 1fr 1fr;
   }
-}
 
-@media screen and (max-width: 800px) {
-  .category-container {
+  @media screen and (max-width: 800px) {
     width: 95vw;
     grid-template-columns: 1fr 1fr;
   }
-}
 
-@media screen and (max-width: 650px) {
-  .category-container {
+  @media screen and (max-width: 650px) {
     width: 95vw;
     grid-template-columns: 1fr;
   }
-}
+`;

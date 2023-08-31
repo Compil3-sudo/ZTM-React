@@ -40,9 +40,6 @@ export const userReducer = (state = USER_INITIAL_STATE, action: AnyAction) => {
     signUpFailed.match(action) ||
     signOutFailed.match(action)
   ) {
-    console.log("FAILURE");
-    console.log("ERROR IS: ", action.payload);
-    console.log(typeof action.payload);
     return {
       ...state,
       error: action.payload,

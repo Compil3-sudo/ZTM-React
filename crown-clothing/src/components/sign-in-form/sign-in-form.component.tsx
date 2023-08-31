@@ -53,7 +53,6 @@ const SignInForm = () => {
       // navigate("/");
     } catch (error) {
       const errorCode = error as AuthError;
-      console.log("EMAIL SIGN IN ERROR TRY CATCH");
 
       switch (errorCode.code) {
         case AuthErrorCodes.INVALID_PASSWORD:
