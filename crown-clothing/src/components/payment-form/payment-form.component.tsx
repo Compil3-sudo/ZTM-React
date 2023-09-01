@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartTotalPrice } from "../../store/cart/cart-selector";
 import { selectCurrentUser } from "../../store/user/user-selector";
-// import { clearCartItems } from "../../store/cart/cart-reducer";
+import { clearCartItems } from "../../store/cart/cart-actions";
 import { useNavigate } from "react-router-dom";
 import { StripeCardElement } from "@stripe/stripe-js";
 
@@ -66,7 +66,7 @@ const PaymentForm = () => {
       if (paymentResult.paymentIntent.status === "succeeded") {
         alert("Payment Successful!");
 
-        // dispatch(clearCartItems());
+        dispatch(clearCartItems());
         navigate("/");
       }
     }
