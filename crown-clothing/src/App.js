@@ -61,7 +61,7 @@ function App() {
   ]);
 
   return (
-    <Suspense fallback={LoadingSpinner}>
+    <Suspense fallback={<LoadingSpinner />}>
       <RouterProvider router={router} />
     </Suspense>
   );
