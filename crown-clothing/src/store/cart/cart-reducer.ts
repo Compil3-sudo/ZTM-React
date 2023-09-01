@@ -6,6 +6,8 @@ import {
   deleteCartItem,
   deleteItemFromCart,
   setIsCartOpen,
+  clearCartItems,
+  clearCart,
 } from "./cart-actions";
 import { AnyAction } from "redux";
 import { CartItem } from "./cart.types";
@@ -45,6 +47,10 @@ export const cartReducer = (
 
   if (deleteItemFromCart.match(action)) {
     return deleteCartItem(state, action.payload);
+  }
+
+  if (clearCartItems.match(action)) {
+    return clearCart();
   }
 
   return state;

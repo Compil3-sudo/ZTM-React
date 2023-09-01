@@ -128,8 +128,7 @@ export function* signUp({
 
     if (userCredential) {
       const { user } = userCredential;
-      const additionalDetails = displayName as AdditionalInformation;
-      yield* put(signUpSuccess(user, additionalDetails));
+      yield* put(signUpSuccess(user, { displayName }));
     }
   } catch (error) {
     yield* put(signUpFailed(error as Error));

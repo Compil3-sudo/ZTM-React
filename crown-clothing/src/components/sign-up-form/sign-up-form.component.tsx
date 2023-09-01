@@ -1,9 +1,7 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../form-input/form-input.component";
-import { AuthError, AuthErrorCodes } from "firebase/auth";
 import "./sign-up-form.styles";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signUpStart } from "../../store/user/user-actions";
 import { SignUpContainer } from "./sign-up-form.styles";
@@ -18,7 +16,6 @@ const defaultFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +28,7 @@ const SignUpForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handlerSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -47,7 +44,7 @@ const SignUpForm = () => {
     <SignUpContainer>
       <h2>Don't have an account ?</h2>
       <span>Sign Up with your email and password</span>
-      <form onSubmit={handlerSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormInput
           label={"Display Name"}
           type="text"

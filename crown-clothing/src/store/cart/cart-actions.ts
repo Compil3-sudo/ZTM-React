@@ -3,8 +3,9 @@ import {
   createAction,
   withMatcher,
   ActionWithPayload,
+  Action,
 } from "../../utils/reducer/reducer.utils";
-import { CartState } from "./cart-reducer";
+import { CART_INITIAL_STATE, CartState } from "./cart-reducer";
 
 export const addCartItem = (
   state: CartState,
@@ -113,6 +114,10 @@ export const deleteCartItem = (
   };
 };
 
+export const clearCart = (): CartState => {
+  return CART_INITIAL_STATE;
+};
+
 // ACTION TYPES
 export type SetIsCartOpen = ActionWithPayload<
   CART_ACTION_TYPES.SET_IS_CART_OPEN,
@@ -123,14 +128,18 @@ export type AddCartItem = ActionWithPayload<
   CART_ACTION_TYPES.ADD_ITEM_TO_CART,
   CartItem
 >;
+
 export type DecrementCartItem = ActionWithPayload<
   CART_ACTION_TYPES.DECREMENT_CART_ITEM,
   CartItem
 >;
+
 export type DeleteCartItem = ActionWithPayload<
   CART_ACTION_TYPES.DELETE_CART_ITEM,
   CartItem
 >;
+
+export type ResetCart = Action<CART_ACTION_TYPES.RESET_CART>;
 
 // CART ACTIONS
 export const addItemToCart = withMatcher(
@@ -151,6 +160,10 @@ export const deleteItemFromCart = withMatcher(
   (productToDelete: CartItem): DeleteCartItem =>
     // completely delete item from cart
     createAction(CART_ACTION_TYPES.DELETE_CART_ITEM, productToDelete)
+);
+
+export const clearCartItems = withMatcher(
+  (): ResetCart => createAction(CART_ACTION_TYPES.RESET_CART)
 );
 
 export const setIsCartOpen = withMatcher(
