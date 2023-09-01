@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./cart-dropdown.styles";
 import Button from "../button/button.component";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +24,12 @@ const CartDropdown = () => {
 
   const navigate = useNavigate();
 
-  const goToCheckoutHandler = () => {
+  const goToCheckoutHandler = useCallback(() => {
     dispatch(setIsCartOpen(!isCartOpen));
     navigate("/checkout");
-  };
+  }, [isCartOpen, navigate, dispatch]);
+  // don't actually need navigate and dispatch,
+  // they never change, but REACT doesn't know that
 
   return (
     <CartDropdownContaier>
