@@ -1,15 +1,24 @@
 import styled from "styled-components";
 
-export const CategoryTitle = styled.h2`
-  font-size: 38px;
-  margin: 0 auto;
-  text-align: center;
+import { Link } from "react-router-dom";
+
+export const CategoryPreviewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+
+  @media screen and (max-width: 800px) {
+    align-items: center;
+  }
 `;
 
-export const CategoryContainer = styled.div`
-  padding: 2rem 0;
-  width: 90vw;
-  margin: 0 auto;
+export const Title = styled(Link)`
+  font-size: 28px;
+  margin-bottom: 25px;
+  cursor: pointer;
+`;
+
+export const Preview = styled.div`
   display: grid;
   gap: 3rem 2rem;
   justify-items: center;

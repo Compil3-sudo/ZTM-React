@@ -3,6 +3,7 @@ import { useEffect, lazy, Suspense } from "react";
 import { checkUserSession } from "./store/user/user-actions";
 import { useDispatch } from "react-redux";
 import LoadingSpinner from "./components/loading-spinner/loading-spinner.component";
+import { GlobalStyle } from "./global.styles";
 
 const Home = lazy(() => import("./routes/home/home.component"));
 const Shop = lazy(() => import("./routes/shop/shop.component"));
@@ -62,6 +63,7 @@ function App() {
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
+      <GlobalStyle />
       <RouterProvider router={router} />
     </Suspense>
   );
