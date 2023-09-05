@@ -8,7 +8,11 @@ import {
   selectCategoriesMap,
 } from "../../store/categories/category-selector";
 import LoadingSpinner from "../../components/loading-spinner/loading-spinner.component";
-import { CategoryContainer, CategoryTitle } from "./category.styles";
+import {
+  CategoryContainer,
+  CategoryPageContainer,
+  CategoryTitle,
+} from "./category.styles";
 
 type CategoryRouteParams = {
   category: string;
@@ -30,17 +34,19 @@ const Category = () => {
 
   return (
     <>
-      <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <CategoryContainer>
-          {products &&
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-        </CategoryContainer>
-      )}
+      <CategoryPageContainer>
+        <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <CategoryContainer>
+            {products &&
+              products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+          </CategoryContainer>
+        )}
+      </CategoryPageContainer>
     </>
   );
 };
