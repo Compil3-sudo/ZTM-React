@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
-    "jest-styled-components": "^7.1.1"
+    "jest-styled-components": "^7.1.1",
+    "redux-saga-test-plan": "^4.0.6"
   }
 }

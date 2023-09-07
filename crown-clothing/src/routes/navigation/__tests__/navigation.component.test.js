@@ -4,7 +4,6 @@ import * as reactRedux from "react-redux";
 
 import Navigation from "../navigation.component";
 import { renderWithProviders } from "../../../utils/test/test.utils";
-import { signOut } from "firebase/auth";
 import { signOutStart } from "../../../store/user/user-actions";
 
 // Mock the useDispatch function

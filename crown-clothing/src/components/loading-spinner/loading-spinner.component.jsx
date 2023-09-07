@@ -4,7 +4,7 @@ import { SpinnerContainer, SpinnerOverlay } from "./loading-spinner.styles";
 
 const LoadingSpinner = () => {
   return (
-    <SpinnerOverlay>
+    <SpinnerOverlay data-testid="spinner">
       <SpinnerContainer />
     </SpinnerOverlay>
   );
